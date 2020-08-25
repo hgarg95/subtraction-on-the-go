@@ -39,15 +39,12 @@ function generatequestion(minuend_digits,subtrahend_digits,borrowflag){
         equal_digits = true;
     }
     do{
-        console.log("Trying for: ", _try, " time");
         [minuend, subtrahend] = generatenumbers(minuend_digits, subtrahend_digits, equal_digits);
-        console.log(minuend,":: ", subtrahend);   
         if(borrowflag){
             if(checkborrow(minuend, subtrahend)){
                 // Generate answer and options
             }else{
                 [minuend,subtrahend] = generateborrow(minuend, subtrahend, subtrahend_digits);
-                console.log(minuend," ", subtrahend);
                 //Generate borrow, answer and options
             }
         }else{
@@ -55,7 +52,6 @@ function generatequestion(minuend_digits,subtrahend_digits,borrowflag){
                 //Generate answer and options
             }else{
                 [minuend,subtrahend] = removeborrow(minuend, subtrahend, subtrahend_digits);
-                console.log(minuend," ", subtrahend);
                 //Remove borrow, generate answer and options
             }
         }
@@ -98,7 +94,6 @@ function generateanswer(minuend, subtrahend){
 
 function generatenumbers(minuend_digits, subtrahend_digits, equal_digits){
     minuend = Math.floor(Math.pow(10,(minuend_digits - 1)) + Math.random() * (Math.pow(10,(minuend_digits - 1))*9));
-    console.log("Minuend  ",minuend);
     if(equal_digits){
         var min = Math.pow(10,(minuend_digits - 1));  
         subtrahend = Math.floor(Math.random()*(minuend - min) + min);   // If minuend and subtrahend digits are equal, then generate subtrahend always lesser than minuend to maintain non-negative answers
@@ -122,15 +117,11 @@ function removeborrow(minuend, subtrahend, subtrahend_digits){
         minuend_c = minuend_c/10;
         count+=1;
     }
-    console.log(borrow_places);
     for (let i=0;i<borrow_places.length;i++){
         var subtrahend_digit = Math.floor((subtrahend/Math.pow(10,borrow_places[i])) % 10);
         var minuend_digit = Math.floor((minuend/Math.pow(10,borrow_places[i])) % 10);
-        console.log(minuend_digit);
-        console.log(subtrahend_digit);
         if(minuend_digit === MIN_DIGIT && subtrahend_digit === MAX_DIGIT){
             var delta_digit = Math.floor(Math.random() * (9 -5) + 5);
-            console.log("Replacement Digit", delta_digit);
             minuend_digit = minuend_digit + (delta_digit * Math.pow(10,borrow_places[i]));
             subtrahend_digit = subtrahend_digit - (delta_digit * Math.pow(10,borrow_places[i]));
 
@@ -138,29 +129,21 @@ function removeborrow(minuend, subtrahend, subtrahend_digits){
             var digit_diff = subtrahend_digit - minuend_digit;
             var add_limit = MAX_DIGIT - subtrahend_digit;
             var digit_to_add = digit_diff + Math.floor(Math.random() * (add_limit + 1));
-            console.log("Replacement Digit", digit_to_add);
             minuend = minuend + (digit_to_add * Math.pow(10,borrow_places[i]));
         }
         else{
            var digit_diff = subtrahend_digit - minuend_digit;
            var digit_to_sub = digit_diff + Math.floor(Math.random() * minuend_digit);
-           console.log("Replacement Digit", digit_to_sub);
            subtrahend = subtrahend - (digit_to_sub * Math.pow(10,borrow_places[i]));         
         }
-        console.log("New Minuend: ", minuend);
-        console.log("New Subtrahend: ", subtrahend)
     }
-    console.log("Final Subtrahend: ", subtrahend)
-    console.log("Final Minuend: ", minuend)
     return [minuend,subtrahend];
 
 }
 
 
 function generateborrow(minuend, subtrahend, subtrahend_digits){
-    console.log("sub dig", subtrahend_digits);
     var max_num_of_borrows = Math.floor(Math.random() * (subtrahend_digits - 1) + 1);
-    console.log(max_num_of_borrows);
     var borrow_places = [];
     for(let i=0; i < max_num_of_borrows; i++){
         borrow_places.push(Math.floor(Math.random() * (max_num_of_borrows)));
@@ -168,23 +151,18 @@ function generateborrow(minuend, subtrahend, subtrahend_digits){
     borrow_places = borrow_places.filter((value,index) => {
         return borrow_places.indexOf(value) === index;
     });
-    console.log(borrow_places);
     for(let i=0; i<borrow_places.length; i++){
         var minuend_digit = Math.floor((minuend/Math.pow(10,borrow_places[i])) % 10);
-        console.log(minuend_digit);
         var subtrahend_digit = Math.floor((subtrahend/Math.pow(10,borrow_places[i])) % 10);
-        console.log(subtrahend_digit);
 
         if (minuend_digit === MAX_DIGIT && subtrahend_digit === MIN_DIGIT){
             var delta_digit = Math.floor(Math.random() * (9 -5) + 5);
-            console.log("Replacement Digit", delta_digit);
             minuend = minuend - (delta_digit * Math.pow(10,borrow_places[i]));
             subtrahend = subtrahend + (delta_digit * Math.pow(10,borrow_places[i]));
         }
         else if(minuend_digit == MAX_DIGIT){
             var digit_diff = minuend_digit - subtrahend_digit;
             var digit_to_sub = digit_diff + Math.floor(Math.random() * (subtrahend_digit) +1 );
-            console.log("Replacement Digit", digit_to_sub);
             minuend = minuend - (digit_to_sub * Math.pow(10,borrow_places[i]));
 
         }
@@ -192,14 +170,9 @@ function generateborrow(minuend, subtrahend, subtrahend_digits){
             var digit_diff = minuend_digit - subtrahend_digit;
             var add_limit = MAX_DIGIT - minuend_digit;
             var digit_to_add = digit_diff + Math.floor(Math.random() * (add_limit) + 1);
-            console.log("Replacement Digit", digit_to_add);
             subtrahend = subtrahend + (digit_to_add * Math.pow(10,borrow_places[i]));
         }
-        console.log("New Minuend: ", minuend);
-        console.log("New Subtrahend: ", subtrahend)
     }
-    console.log("Final Subtrahend: ", subtrahend)
-    console.log("Final Minuend: ", minuend)
     return [minuend,subtrahend];
 }
 
@@ -214,7 +187,6 @@ function checkborrow(minuend, subtrahend){
         subtrahend = subtrahend/10;
         minuend = minuend/10;
     }
-    console.log(is_borrow);
     if(is_borrow){
         return true;
     }else{
