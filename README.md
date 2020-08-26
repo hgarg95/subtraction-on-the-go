@@ -13,6 +13,10 @@ URL: https://arcane-tor-78934.herokuapp.com
 
 API Endpoint: https://arcane-tor-78934.herokuapp.com/question
 
+Sample Curl:
+
+curl --location --request GET 'https://arcane-tor-78934.herokuapp.com/question?questions=10&minuend_digits=9&subtrahend_digits=8&borrowflag=false'
+
 Test Cases Input and Postman Collection are present inside the folder: Tests
 
 To run Test cases:
