@@ -6,6 +6,7 @@ const RETRY_LIMIT = 3;
 var minuend; var subtrahend;
 
 
+
 exports.questionlist = (req, res) => {
     var jsondata=[];
     requestvalidate(req);
@@ -20,6 +21,7 @@ exports.questionlist = (req, res) => {
             message: response.message
         })
     }
+
     for(let i=0; i < JSON.parse(req.query.questions); i++){
         jsondata.push(generatequestion(req.query.minuend_digits, req.query.subtrahend_digits, JSON.parse(req.query.borrowflag)));
     }
@@ -78,13 +80,39 @@ function generatequestion(minuend_digits,subtrahend_digits,borrowflag){
   }
  }
  var correct_answer = generateanswer(minuend, subtrahend);
+ var options = generateoptions(minuend, subtrahend, correct_answer);
  response_obj['minuend'] = minuend;
  response_obj['subtrahend'] = subtrahend;
- response_obj['answer'] = correct_answer;
- response_obj['options'] = ['1','2','3','4'];
+ response_obj['correct_answer'] = correct_answer;
+ response_obj['options'] = options;
  return response_obj;
-//  console.log(jsondata);
+}
 
+
+function generateoptions(minuend, subtrahend, answer){
+    var options = [];
+    var option_A = option1(answer.toString());
+    var option_B = minuend + subtrahend;
+    var option_C = ( answer - 1 ).toString().length === answer.toString().length ? (answer - 1) : (answer + 1);
+    options.push(option_A, option_B, option_C, answer);
+    options.sort(() => Math.random() - 0.5); // Shuffling the array so that a specifc option D should not be the answer everytime
+    return options;
+}
+
+function option1(answer_string){
+    var option_string;
+    do{
+        if (answer_string.length === 1){
+            option_string = Math.floor(Math.random() * 9 + 1);
+        }else{
+            var sub_answer_string = answer_string.substring(0,(answer_string.length - 1));
+            var replacement_string = (Math.floor(Math.pow(10,(sub_answer_string.length - 1)) + Math.random() * (Math.pow(10,(sub_answer_string.length  - 1))*9))).toString();
+            option_string = replacement_string + answer_string.substring(answer_string.length - 1);
+    
+        }
+    } while(option_string == answer_string)
+ 
+    return parseInt(option_string);
 
 }
 
@@ -117,25 +145,29 @@ function removeborrow(minuend, subtrahend, subtrahend_digits){
         minuend_c = minuend_c/10;
         count+=1;
     }
+
     for (let i=0;i<borrow_places.length;i++){
         var subtrahend_digit = Math.floor((subtrahend/Math.pow(10,borrow_places[i])) % 10);
         var minuend_digit = Math.floor((minuend/Math.pow(10,borrow_places[i])) % 10);
         if(minuend_digit === MIN_DIGIT && subtrahend_digit === MAX_DIGIT){
             var delta_digit = Math.floor(Math.random() * (9 -5) + 5);
-            minuend_digit = minuend_digit + (delta_digit * Math.pow(10,borrow_places[i]));
-            subtrahend_digit = subtrahend_digit - (delta_digit * Math.pow(10,borrow_places[i]));
+            minuend = minuend + (delta_digit * Math.pow(10,borrow_places[i]));
+            subtrahend = subtrahend - (delta_digit * Math.pow(10,borrow_places[i]));
 
         }else if(minuend_digit === MIN_DIGIT){
             var digit_diff = subtrahend_digit - minuend_digit;
             var add_limit = MAX_DIGIT - subtrahend_digit;
             var digit_to_add = digit_diff + Math.floor(Math.random() * (add_limit + 1));
+
             minuend = minuend + (digit_to_add * Math.pow(10,borrow_places[i]));
         }
         else{
            var digit_diff = subtrahend_digit - minuend_digit;
            var digit_to_sub = digit_diff + Math.floor(Math.random() * minuend_digit);
+
            subtrahend = subtrahend - (digit_to_sub * Math.pow(10,borrow_places[i]));         
         }
+
     }
     return [minuend,subtrahend];
 
@@ -272,6 +304,12 @@ function typevalidation(req){
         response.missing_param = [];
         response.message = "Single digit subtraction with borrow flag is not possible"
         return false;       
+    }
+    if (req.query.minuend_digits == 0 || req.query.minuend_digits > 10 || req.query.subtrahend_digits == 0 || req.query.subtrahend_digits > 10){
+        response.valid = false;
+        response.missing_param = [];
+        response.message = "Minuend and Subtrahend digits should be an integer between 1 and 10 (both inclusive)"
+        return false; 
     }
     return true;
 

@@ -1,0 +1,242 @@
+{
+	"info": {
+		"_postman_id": "020a2256-7c5d-458a-a289-119795962dd1",
+		"name": "Subtraction-on-the-go",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Positive_Tests for status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3e94477b-22b2-43b1-bdf9-84cf6d687350",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://arcane-tor-78934.herokuapp.com/question?questions={{questions}}&minuend_digits={{minuend_digits}}&subtrahend_digits={{subtrahend_digits}}&borrowflag={{borrowflag}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"question"
+					],
+					"query": [
+						{
+							"key": "questions",
+							"value": "{{questions}}"
+						},
+						{
+							"key": "minuend_digits",
+							"value": "{{minuend_digits}}"
+						},
+						{
+							"key": "subtrahend_digits",
+							"value": "{{subtrahend_digits}}"
+						},
+						{
+							"key": "borrowflag",
+							"value": "{{borrowflag}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bad Request Tests",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "39021826-d025-4bdd-9d14-3ac912220d48",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://arcane-tor-78934.herokuapp.com/question?questions={{questions}}&minuend_digits={{minuend_digits}}&subtrahend_digits={{subtrahend_digits}}&borrowflag={{borrowflag}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"question"
+					],
+					"query": [
+						{
+							"key": "questions",
+							"value": "{{questions}}"
+						},
+						{
+							"key": "minuend_digits",
+							"value": "{{minuend_digits}}"
+						},
+						{
+							"key": "subtrahend_digits",
+							"value": "{{subtrahend_digits}}"
+						},
+						{
+							"key": "borrowflag",
+							"value": "{{borrowflag}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Positive Borrow Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9f55274e-9a08-40d8-96a3-e79255b37c26",
+						"exec": [
+							"pm.test(\"Positive Borrow Test\", function () {",
+							"  var questions = pm.response.json().questions;",
+							"  for(let i =0; i < questions.length; i++){",
+							"    var minuend = questions[i].minuend;",
+							"    var subtrahend = questions[i].subtrahend;",
+							"    var is_borrow = false;",
+							"    while(subtrahend>0){",
+							"        if((subtrahend % 10) > (minuend % 10)){",
+							"            is_borrow = true;",
+							"            break;",
+							"        }",
+							"        subtrahend = subtrahend/10;",
+							"        minuend = minuend/10;",
+							"    }",
+							"    pm.expect(is_borrow).to.eql(true);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://arcane-tor-78934.herokuapp.com/question?questions={{questions}}&minuend_digits={{minuend_digits}}&subtrahend_digits={{subtrahend_digits}}&borrowflag={{borrowflag}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"question"
+					],
+					"query": [
+						{
+							"key": "questions",
+							"value": "{{questions}}"
+						},
+						{
+							"key": "minuend_digits",
+							"value": "{{minuend_digits}}"
+						},
+						{
+							"key": "subtrahend_digits",
+							"value": "{{subtrahend_digits}}"
+						},
+						{
+							"key": "borrowflag",
+							"value": "{{borrowflag}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Negative Borrow Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c97fb52a-dfd7-4c44-95f7-f57e1c40b132",
+						"exec": [
+							"pm.test(\"Negative Borrow Test\", function () {",
+							"  var questions = pm.response.json().questions;",
+							"  for(let i =0; i < questions.length; i++){",
+							"    var minuend = questions[i].minuend;",
+							"    var subtrahend = questions[i].subtrahend;",
+							"    var is_borrow = false;",
+							"    while(subtrahend>0){",
+							"        if((subtrahend % 10) > (minuend % 10)){",
+							"            is_borrow = true;",
+							"            break;",
+							"        }",
+							"        subtrahend = subtrahend/10;",
+							"        minuend = minuend/10;",
+							"    }",
+							"    pm.expect(is_borrow).to.eql(false);",
+							"  }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://arcane-tor-78934.herokuapp.com/question?questions={{questions}}&minuend_digits={{minuend_digits}}&subtrahend_digits={{subtrahend_digits}}&borrowflag={{borrowflag}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"question"
+					],
+					"query": [
+						{
+							"key": "questions",
+							"value": "{{questions}}"
+						},
+						{
+							"key": "minuend_digits",
+							"value": "{{minuend_digits}}"
+						},
+						{
+							"key": "subtrahend_digits",
+							"value": "{{subtrahend_digits}}"
+						},
+						{
+							"key": "borrowflag",
+							"value": "{{borrowflag}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

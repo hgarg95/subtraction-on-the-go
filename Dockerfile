@@ -6,4 +6,8 @@ COPY . /subtraction-on-the-go
 
 RUN npm install
 
-ENTRYPOINT ["npm", "start"]
+RUN npm install -g newman
+
+RUN ["chmod", "+x", "deployment.sh"]
+
+ENTRYPOINT ["./deployment.sh"]

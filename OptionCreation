@@ -1,0 +1,14 @@
+***************** OPTION CREATION ***************
+
+The four options for each of the questions are generated with the following logic:
+
+1. Option A - Generally, while solving subtraction questions, we tempt to look for the options whose unit digit is same as the correct answer's unit digit. So, I have created an option with the unit digit being the same as answer's unit digit and rest of the digits are different ( to differentiate it from the answer ). This is not possible with the 1-digit questions. So, a random number between 1-9 has been generated in this case.
+ 
+e.g. 5123 - 2145 = 2978. Here, option A will be: XXX8 (XXX - any random 3 digit number).
+
+
+2. Option B - This is simply the addition of minuend and subtrahend
+
+3. Option C - In this, I have simply subtracted 1 from the answer. If subtracting 1 is resulting in the option's number of digits being different from the correct answer's number of digits, I have added 1 to the answer instead of subtracting.
+
+4. Option D - Correct answer

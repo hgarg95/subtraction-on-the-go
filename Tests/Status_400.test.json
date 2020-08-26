@@ -1,0 +1,32 @@
+
+[{
+    "questions": 3, 
+    "minuend_digits": 1,
+    "subtrahend_digits": 1,
+    "borrowflag": true
+},
+{
+    "questions": 4,
+    "minuend_digits": 2,
+    "subtrahend_digits": 3,
+    "borrowflag": true
+},
+{
+    "questions": 10,
+    "minuend_digits": 11,
+    "subtrahend_digits": 11,
+    "borrowflag": false
+},
+{
+    "questions": 4,
+    "minuend_digits": 2,
+    "subtrahend_digits": 2,
+    "borrowflag": "fals"
+},
+{
+    "questions": 6,
+    "minuend_digits": "9h",
+    "subtrahend_digits": 8,
+    "borrowflag": false
+}
+]
